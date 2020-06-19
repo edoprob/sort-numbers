@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="assets/bootstrap.css">
+    <link rel="stylesheet" href="assets/self-style.css">
+
+    <title>Document</title>
+  </head>
+  <body onload="document.getElementById('amountInput').focus()">
+    <div class="container">
+      <hr>
+      <h4>Questão 04</h4>
+      <p>Crie um componente que possua 3 caixas de texto que só aceitam números e tenha os rótulos (label) Quantidade de números, valor mínimo e valor máximo. O componente deve ainda criar um array com quantidade de números aleatórios não repetidos e ordená-los. Os números devem estar entre valor mínimo e valor máximo (inclusives, ou seja incluindo o valor mínimo e valor máximo). Lembre-se que para calcular quantidade de números deve ser menor que a soma de valor mínimo e valor máximo.</p>
+      <div class="card">
+        <div class="card-header">
+
+            <label>Quantidade de numeros</label><br>
+            <input type="text" maxlength="3" id="amountInput" onkeyup="analyze()"><br><br>
+
+            <label><b>Maior</b> numero</label><br>
+            <input type="text" maxlength="3" id="maxInput" onkeyup="analyze()"><br><br>
+
+            <label><b>Menor</b> numero</label><br>
+            <input type="text" maxlength="3" id="minInput" onkeyup="analyze()"><br><br>
+
+        </div>
+        <div class="card-body">
+          <hr>
+          <p>Aleatorio:</p>
+          <b><p id="aleatoryArr"></p></b>
+          <hr>
+          <p>Ordenado:</p>
+          <b><p id="sortedArr"></p></b>
+        </div>
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="assets/jquery.js"></script>
+    <script src="assets/popper.js"></script>
+    <script src="assets/bootstrap.js"></script>
+    <script type="text/javascript">
+      function analyze(){
+        console.clear();
+
+        // declarando
+        var amountInput = document.getElementById("amountInput").value;
+        var maxInput = document.getElementById("maxInput").value;
+        var minInput = document.getElementById("minInput").value;
+        var aleatoryArr = [];
+        var sortedArr = [];
+        var aleatoryParagraph = document.getElementById("aleatoryArr")
+        var sortedParagraph = document.getElementById("sortedArr");
+
+        // primeiro tratamento
+        if (isNaN(amountInput) || isNaN(maxInput) || isNaN(minInput)  || amountInput.indexOf(".") > -1 || maxInput.indexOf(".") > -1 || minInput.indexOf(".") > -1) {
+          document.getElementById("amountInput").value = "";
+          document.getElementById("maxInput").value = "";
+          document.getElementById("minInput").value = "";
+          alert("Digite números válidos");
+          document.getElementById('amountInput').focus();
+          throw new Error("err");
+        }
+
+        while(aleatoryParagraph.firstChild){
+          aleatoryParagraph.removeChild(aleatoryParagraph.firstChild)
+        }
+
+        while(sortedParagraph.firstChild){
+          sortedParagraph.removeChild(sortedParagraph.firstChild)
+        }
+
+        //tratando mais ainda
+        if (amountInput != "" && maxInput != "" && minInput != "") {
+          
+          amountInput = parseInt(amountInput);
+          maxInput = parseInt(maxInput);
+          minInput = parseInt(minInput);
+
+          if (minInput < 0) {
+            document.getElementById("amountInput").value = "";
+            document.getElementById("maxInput").value = "";
+            document.getElementById("minInput").value = "";
+            alert("O [Menor número] não pode ser negativo");
+            document.getElementById('amountInput').focus();
+            throw new Error("err");        
+          }
+
+          if (minInput >= maxInput) {
+            document.getElementById("amountInput").value = "";
+            document.getElementById("maxInput").value = "";
+            document.getElementById("minInput").value = "";
+            alert("O [Maior número] não pode ser menor nem igual ao [Menor número]");
+            document.getElementById('amountInput').focus();
+            throw new Error("err");        
+          }
+          if (amountInput > (maxInput - minInput) +1) {
+            document.getElementById("amountInput").value = "";
+            document.getElementById("maxInput").value = "";
+            document.getElementById("minInput").value = "";
+            alert("Você digitou um valor que ultrapassa o limite de todos os números possíveis");
+            document.getElementById('amountInput').focus();
+            throw new Error("err");
+          }
+
+          // pegando o array entre os numeros aleatorios
+          var i = 0;
+          do{
+            let randomNumber = Math.floor(Math.random()*((maxInput+1)-minInput)+minInput);
+            if (aleatoryArr.indexOf(randomNumber) == -1) {
+              aleatoryArr.push(randomNumber);
+              i++
+            }
+          }while(i < amountInput);
+
+            // criando o elemento do resultado do array aleatorio
+            var firstResult = document.createElement("span");
+            firstResult.innerHTML = aleatoryArr.join(" ´´ ");
+            aleatoryParagraph.appendChild(firstResult);
+          }
+
+        // ordenando array aleatorio e criando os elementos
+        sortedArr = aleatoryArr.sort(function(a, b){return a - b});
+        var lastResult = document.createElement("span");
+        lastResult.innerHTML = sortedArr.join(" ´´ ");
+        sortedParagraph.appendChild(lastResult);
+      }
+
+    </script>
+  </body>
+</html>
